@@ -1,4 +1,4 @@
-name: Build and test application
+name: CI CD Workflow
 
 on:
   push:
@@ -10,8 +10,7 @@ on:
 
 env:
   COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-  PROJECT_NAME: microservice-template-spring
-  ARTIFACT_NAME: spring-app-jar
+  APPLICATION_NAME: microservice-template-spring
 
 jobs:
   build-and-test:
@@ -36,8 +35,9 @@ jobs:
       - name: Upload JAR file artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
           path: target/*.jar
+          name: ${{ env.APPLICATION_NAME }}
+          if-no-files-found: error
   build-and-push:
     name: Build and push docker image
     needs: [ build-and-test ]
@@ -46,7 +46,7 @@ jobs:
       - name: Download JAR file artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: ${{ env.APPLICATION_NAME }}
       - name: Set up docker buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to docker hub
@@ -58,12 +58,13 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           flavor: latest=false
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APPLICATION_NAME }}
           tags: type=raw,value=${{ env.COMMIT_SHA }}
         id: docker_meta
       - name: Build final image
         uses: docker/build-push-action@v6
         with:
+          build-args: JAR_FILE=*.jar
           labels: ${{ steps.docker_meta.outputs.labels }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           push: true
