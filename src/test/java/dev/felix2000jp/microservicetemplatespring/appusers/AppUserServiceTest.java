@@ -173,7 +173,7 @@ class AppUserServiceTest {
 
         var actual = catchThrowable(() -> appUserService.delete(appUser.getId()));
 
-        assertThat(actual).isInstanceOf(AppUserConflictException.class);
+        assertThat(actual).isInstanceOf(AppUserNotFoundException.class);
     }
 
 }
