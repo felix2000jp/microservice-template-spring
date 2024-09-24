@@ -1,0 +1,71 @@
+name: CI CD Workflow
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ src/** , .github/workflows/** ]
+  pull_request:
+    branches: [ main ]
+    paths: [ src/** , .github/workflows/** ]
+
+env:
+  COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  APPLICATION_NAME: microservice-template-spring
+
+jobs:
+  build-and-test:
+    name: Build and test application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup temurin JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Setup maven dependency caching
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          path: ~/.m2
+          restore-keys: ${{ runner.os }}-m2
+      - name: Package application
+        run: mvn clean package
+      - name: Upload JAR file artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: target/*.jar
+          name: ${{ env.APPLICATION_NAME }}
+          if-no-files-found: error
+  build-and-push:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: Build and push docker image
+    needs: [ build-and-test ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download JAR file artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.APPLICATION_NAME }}
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Docker metadata for final image
+        uses: docker/metadata-action@v5
+        with:
+          flavor: latest=false
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APPLICATION_NAME }}
+          tags: type=raw,value=${{ env.COMMIT_SHA }}
+        id: docker_meta
+      - name: Build final image
+        uses: docker/build-push-action@v6
+        with:
+          build-args: JAR_FILE=*.jar
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          push: true
