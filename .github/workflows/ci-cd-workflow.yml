@@ -39,6 +39,7 @@ jobs:
           name: ${{ env.APPLICATION_NAME }}
           if-no-files-found: error
   build-and-push:
+    if: ${{ github.ref == 'refs/heads/main' }}
     name: Build and push docker image
     needs: [ build-and-test ]
     runs-on: ubuntu-latest
