@@ -52,9 +52,9 @@ jobs:
       - name: Generate metadata
         uses: docker/metadata-action@v5
         with:
-          flavor: latest=false
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APPLICATION_NAME }}
-          tags: type=edge
+          tags: |
+            type=edge
         id: docker_meta
       - name: Build and push image
         uses: docker/build-push-action@v6
