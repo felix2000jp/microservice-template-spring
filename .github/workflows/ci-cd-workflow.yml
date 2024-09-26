@@ -52,12 +52,12 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APPLICATION_NAME }}
-          tags: type=raw,value=${{ github.sha }}
+          tags: type=raw,value=${{ github.event.pull_request.head.sha || github.sha }}
         id: docker_meta
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          build-args: JAR_FILE=*.jar
-          labels: ${{ steps.docker_meta.outputs.labels }}
-          tags: ${{ steps.docker_meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          build-args: JAR_FILE=*.jar
