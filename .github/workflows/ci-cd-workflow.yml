@@ -9,7 +9,7 @@ on:
     paths: [ src/** , .github/workflows/** ]
 
 env:
-  DEFAULT_BRANCH: ${{ github.ref == 'refs/heads/main' }}
+  DEFAULT_BRANCH: ${{ 'refs/heads/main' }}
   APPLICATION_NAME: microservice-template-spring
 
 jobs:
@@ -53,8 +53,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APPLICATION_NAME }}
-          tags: |
-            type=edge
+          tags: type=sha
         id: docker_meta
       - name: Build and push image
         uses: docker/build-push-action@v6
