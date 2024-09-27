@@ -11,7 +11,7 @@ env:
 
 jobs:
   build-and-test:
-    name: Build and test application
+    name: Build and test app
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,7 +31,7 @@ jobs:
           name: ${{ env.APPLICATION_NAME }}
           if-no-files-found: error
   build-and-push:
-    name: Build and push docker image
+    name: Build and push image
     needs: [ build-and-test ]
     runs-on: ubuntu-latest
     steps:
@@ -59,3 +59,10 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           build-args: JAR_FILE=*.jar
+  deploy-image:
+    name: Deploy to production
+    needs: [ build-and-push ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup deploy env
+        run: echo "Use this step to deploy your app if needed"
