@@ -59,8 +59,3 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           build-args: JAR_FILE=*.jar
-  deploy-image:
-    if: false
-    name: Deploy to production
-    needs: [ build-and-push ]
-    runs-on: ubuntu-latest
