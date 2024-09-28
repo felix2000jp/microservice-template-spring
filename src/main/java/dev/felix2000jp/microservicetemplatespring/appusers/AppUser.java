@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
-class AppUser {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -24,6 +24,19 @@ class AppUser {
     @NotBlank
     private String password;
 
+    public AppUser() {
+    }
+
+    public AppUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public AppUser(UUID id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
 
     public UUID getId() {
         return id;

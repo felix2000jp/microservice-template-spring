@@ -1,15 +1,17 @@
 package dev.felix2000jp.microservicetemplatespring.appusers;
 
+import dev.felix2000jp.microservicetemplatespring.appusers.exceptions.AppUserConflictException;
+import dev.felix2000jp.microservicetemplatespring.appusers.exceptions.AppUserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-class AppUserService {
+public class AppUserService {
 
     private final AppUserRepository appUserRepository;
 
-    AppUserService(AppUserRepository appUserRepository) {
+    public AppUserService(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
     }
 

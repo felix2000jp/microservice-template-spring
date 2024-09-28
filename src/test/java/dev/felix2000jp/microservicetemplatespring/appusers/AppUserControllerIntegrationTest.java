@@ -1,5 +1,8 @@
 package dev.felix2000jp.microservicetemplatespring.appusers;
 
+import dev.felix2000jp.microservicetemplatespring.appusers.dtos.AppUserDto;
+import dev.felix2000jp.microservicetemplatespring.appusers.dtos.CreateAppUserDto;
+import dev.felix2000jp.microservicetemplatespring.appusers.dtos.UpdateAppUserDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AppUserControllerIntegrationTest {
+public class AppUserControllerIntegrationTest {
 
     @Container
     @ServiceConnection
@@ -32,9 +35,7 @@ class AppUserControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        appUser = new AppUser();
-        appUser.setUsername("username");
-        appUser.setPassword("password");
+        appUser = new AppUser("username", "password");
         appUser = appUserRepository.save(appUser);
 
         appUserDto = new AppUserDto(appUser.getId(), appUser.getUsername());

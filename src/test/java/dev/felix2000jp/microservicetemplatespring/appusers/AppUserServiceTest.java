@@ -1,5 +1,7 @@
 package dev.felix2000jp.microservicetemplatespring.appusers;
 
+import dev.felix2000jp.microservicetemplatespring.appusers.exceptions.AppUserConflictException;
+import dev.felix2000jp.microservicetemplatespring.appusers.exceptions.AppUserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AppUserServiceTest {
+public class AppUserServiceTest {
 
     @Mock
     private AppUserRepository appUserRepository;
@@ -28,10 +30,7 @@ class AppUserServiceTest {
 
     @BeforeEach
     void setUp() {
-        appUser = new AppUser();
-        appUser.setId(UUID.randomUUID());
-        appUser.setUsername("username");
-        appUser.setPassword("password");
+        appUser = new AppUser(UUID.randomUUID(), "username", "password");
     }
 
     @Test
@@ -72,9 +71,7 @@ class AppUserServiceTest {
 
     @Test
     void create_should_return_user_when_username_unique() {
-        var appUserToCreate = new AppUser();
-        appUserToCreate.setUsername(appUser.getUsername());
-        appUserToCreate.setPassword(appUser.getPassword());
+        var appUserToCreate = new AppUser(appUser.getUsername(), appUser.getPassword());
 
         when(appUserRepository.existsByUsername(appUserToCreate.getUsername())).thenReturn(false);
         when(appUserRepository.save(appUserToCreate)).thenReturn(appUser);
@@ -86,9 +83,7 @@ class AppUserServiceTest {
 
     @Test
     void create_should_throw_when_username_not_unique() {
-        var appUserToCreate = new AppUser();
-        appUserToCreate.setUsername(appUser.getUsername());
-        appUserToCreate.setPassword(appUser.getUsername());
+        var appUserToCreate = new AppUser(appUser.getUsername(), appUser.getPassword());
 
         when(appUserRepository.existsByUsername(appUserToCreate.getUsername())).thenReturn(true);
 
@@ -99,10 +94,7 @@ class AppUserServiceTest {
 
     @Test
     void update_should_return_user_when_user_exists_and_username_not_new() {
-        var updatedAppUser = new AppUser();
-        updatedAppUser.setId(appUser.getId());
-        updatedAppUser.setUsername(appUser.getUsername());
-        updatedAppUser.setPassword("new password");
+        var updatedAppUser = new AppUser(appUser.getId(), appUser.getUsername(), "new password");
 
         when(appUserRepository.findById(updatedAppUser.getId())).thenReturn(Optional.of(appUser));
         when(appUserRepository.existsByUsername(updatedAppUser.getUsername())).thenReturn(true);
@@ -115,10 +107,7 @@ class AppUserServiceTest {
 
     @Test
     void update_should_return_user_when_user_exists_and_username_new_and_unique() {
-        var updatedAppUser = new AppUser();
-        updatedAppUser.setId(appUser.getId());
-        updatedAppUser.setUsername("new username");
-        updatedAppUser.setPassword("new password");
+        var updatedAppUser = new AppUser(appUser.getId(), "new username", "new password");
 
         when(appUserRepository.findById(updatedAppUser.getId())).thenReturn(Optional.of(appUser));
         when(appUserRepository.existsByUsername(updatedAppUser.getUsername())).thenReturn(false);
@@ -131,10 +120,7 @@ class AppUserServiceTest {
 
     @Test
     void update_should_throw_when_user_not_exists() {
-        var updatedAppUser = new AppUser();
-        updatedAppUser.setId(appUser.getId());
-        updatedAppUser.setUsername("new username");
-        updatedAppUser.setPassword("new password");
+        var updatedAppUser = new AppUser(appUser.getId(), "new username", "new password");
 
         when(appUserRepository.findById(updatedAppUser.getId())).thenReturn(Optional.empty());
 
@@ -145,10 +131,7 @@ class AppUserServiceTest {
 
     @Test
     void update_Should_throw_when_username_new_and_not_unique() {
-        var updatedAppUser = new AppUser();
-        updatedAppUser.setId(appUser.getId());
-        updatedAppUser.setUsername("new username");
-        updatedAppUser.setPassword("new password");
+        var updatedAppUser = new AppUser(appUser.getId(), "new username", "new password");
 
         when(appUserRepository.findById(updatedAppUser.getId())).thenReturn(Optional.of(appUser));
         when(appUserRepository.existsByUsername(updatedAppUser.getUsername())).thenReturn(true);

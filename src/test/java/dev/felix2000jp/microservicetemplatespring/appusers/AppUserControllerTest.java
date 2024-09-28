@@ -1,5 +1,7 @@
 package dev.felix2000jp.microservicetemplatespring.appusers;
 
+import dev.felix2000jp.microservicetemplatespring.appusers.exceptions.AppUserConflictException;
+import dev.felix2000jp.microservicetemplatespring.appusers.exceptions.AppUserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AppUserController.class)
-class AppUserControllerTest {
+public class AppUserControllerTest {
 
     @MockBean
     private AppUserService appUserService;
@@ -33,10 +35,7 @@ class AppUserControllerTest {
 
     @BeforeEach
     void setUp() {
-        appUser = new AppUser();
-        appUser.setId(UUID.randomUUID());
-        appUser.setUsername("username");
-        appUser.setPassword("password");
+        appUser = new AppUser(UUID.randomUUID(), "username", "password");
 
         appUserDtoJson = String.format("""
                 {

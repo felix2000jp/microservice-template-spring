@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class AppUserRepositoryTest {
+public class AppUserRepositoryTest {
 
     @Container
     @ServiceConnection
@@ -31,9 +31,7 @@ class AppUserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        appUser = new AppUser();
-        appUser.setUsername("username");
-        appUser.setPassword("password");
+        appUser = new AppUser("username", "password");
         appUser = appUserRepository.save(appUser);
     }
 

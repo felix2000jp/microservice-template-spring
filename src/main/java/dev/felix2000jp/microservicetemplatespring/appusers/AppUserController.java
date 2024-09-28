@@ -1,5 +1,8 @@
 package dev.felix2000jp.microservicetemplatespring.appusers;
 
+import dev.felix2000jp.microservicetemplatespring.appusers.dtos.AppUserDto;
+import dev.felix2000jp.microservicetemplatespring.appusers.dtos.CreateAppUserDto;
+import dev.felix2000jp.microservicetemplatespring.appusers.dtos.UpdateAppUserDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +12,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
-class AppUserController {
+public class AppUserController {
 
     private final AppUserMapper appUserMapper;
     private final AppUserService appUserService;
 
-    AppUserController(AppUserMapper appUserMapper, AppUserService appUserService) {
+    public AppUserController(AppUserMapper appUserMapper, AppUserService appUserService) {
         this.appUserMapper = appUserMapper;
         this.appUserService = appUserService;
     }

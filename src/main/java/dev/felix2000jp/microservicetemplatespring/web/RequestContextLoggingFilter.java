@@ -19,7 +19,7 @@ import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 @Order(HIGHEST_PRECEDENCE)
 @Component
-class RequestContextLoggingFilter extends OncePerRequestFilter {
+public class RequestContextLoggingFilter extends OncePerRequestFilter {
 
     private final static Logger logger = LoggerFactory.getLogger(RequestContextLoggingFilter.class);
 
