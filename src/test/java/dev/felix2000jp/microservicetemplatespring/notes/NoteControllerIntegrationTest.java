@@ -59,7 +59,7 @@ public class NoteControllerIntegrationTest {
     }
 
     @Test
-    void create_should_save_note_when_note_not_exists() {
+    void create_should_save_note() {
         var createnoteDto = new CreateNoteDto("new title", "new content");
 
         var location = restTemplate.postForLocation("/api/notes", createnoteDto, NoteDto.class);

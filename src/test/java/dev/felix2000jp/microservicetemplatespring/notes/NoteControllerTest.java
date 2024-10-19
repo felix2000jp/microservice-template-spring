@@ -1,6 +1,5 @@
 package dev.felix2000jp.microservicetemplatespring.notes;
 
-import dev.felix2000jp.microservicetemplatespring.notes.exceptions.NoteConflictException;
 import dev.felix2000jp.microservicetemplatespring.notes.exceptions.NoteNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,25 +105,6 @@ public class NoteControllerTest {
                 .perform(post("/api/notes").contentType(MediaType.APPLICATION_JSON).content(bodyJson))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/api/notes/" + note.getId()));
-    }
-
-    @Test
-    void create_should_return_409_when_note_not_unique() throws Exception {
-        when(noteService.create(any(Note.class))).thenThrow(new NoteConflictException());
-
-        var bodyJson = String.format("""
-                {
-                    "title": "%s",
-                    "content": "%s"
-                }
-                """, note.getTitle(), note.getContent());
-
-        mockMvc
-                .perform(post("/api/notes").contentType(MediaType.APPLICATION_JSON).content(bodyJson))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.title").value("Conflict"))
-                .andExpect(jsonPath("$.status").value(409))
-                .andExpect(jsonPath("$.detail").value("Note already exists"));
     }
 
     @Test

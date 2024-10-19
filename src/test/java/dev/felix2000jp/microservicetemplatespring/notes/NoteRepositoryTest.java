@@ -54,18 +54,4 @@ public class NoteRepositoryTest {
         assertThat(actual).usingRecursiveComparison().isEqualTo(Optional.empty());
     }
 
-    @Test
-    void existsByTitle_should_return_true_when_title_exists() {
-        var actual = noteRepository.existsByTitle(note.getTitle());
-
-        assertThat(actual).isTrue();
-    }
-
-    @Test
-    void existsByTitle_should_return_false_when_Title_not_exists() {
-        var actual = noteRepository.existsByTitle("some other title that does not exist");
-
-        assertThat(actual).isFalse();
-    }
-
 }

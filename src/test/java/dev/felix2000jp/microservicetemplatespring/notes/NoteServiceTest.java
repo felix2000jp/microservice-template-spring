@@ -1,6 +1,5 @@
 package dev.felix2000jp.microservicetemplatespring.notes;
 
-import dev.felix2000jp.microservicetemplatespring.notes.exceptions.NoteConflictException;
 import dev.felix2000jp.microservicetemplatespring.notes.exceptions.NoteNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,26 +69,14 @@ public class NoteServiceTest {
     }
 
     @Test
-    void create_should_return_note_when_title_unique() {
+    void create_should_return_note() {
         var noteToCreate = new Note(note.getTitle(), note.getContent());
 
-        when(noteRepository.existsByTitle(noteToCreate.getTitle())).thenReturn(false);
         when(noteRepository.save(noteToCreate)).thenReturn(note);
 
         var actual = noteService.create(noteToCreate);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(note);
-    }
-
-    @Test
-    void create_should_throw_when_title_not_unique() {
-        var noteToCreate = new Note(note.getTitle(), note.getContent());
-
-        when(noteRepository.existsByTitle(noteToCreate.getTitle())).thenReturn(true);
-
-        var actual = catchThrowable(() -> noteService.create(noteToCreate));
-
-        assertThat(actual).isInstanceOf(NoteConflictException.class);
     }
 
     @Test

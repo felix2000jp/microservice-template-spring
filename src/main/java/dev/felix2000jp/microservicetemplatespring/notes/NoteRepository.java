@@ -11,6 +11,4 @@ public interface NoteRepository extends JpaRepository<Note, UUID> {
 
     Optional<Note> findByTitle(String title);
 
-    boolean existsByTitle(String title);
-
 }

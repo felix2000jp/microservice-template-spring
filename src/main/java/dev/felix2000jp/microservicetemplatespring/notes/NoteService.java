@@ -1,6 +1,5 @@
 package dev.felix2000jp.microservicetemplatespring.notes;
 
-import dev.felix2000jp.microservicetemplatespring.notes.exceptions.NoteConflictException;
 import dev.felix2000jp.microservicetemplatespring.notes.exceptions.NoteNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +27,6 @@ public class NoteService {
     }
 
     Note create(Note note) {
-        var title = note.getTitle();
-        var doesNoteExist = noteRepository.existsByTitle(title);
-
-        if (doesNoteExist) {
-            throw new NoteConflictException();
-        }
-
         return noteRepository.save(note);
     }
 
