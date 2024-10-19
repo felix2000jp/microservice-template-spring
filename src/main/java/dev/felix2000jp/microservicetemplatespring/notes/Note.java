@@ -1,9 +1,7 @@
 package dev.felix2000jp.microservicetemplatespring.notes;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import dev.felix2000jp.microservicetemplatespring.appusers.Appuser;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -23,6 +21,10 @@ public class Note {
     @Size(min = 3, max = 500)
     @NotBlank
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "appuser_id", nullable = false)
+    private Appuser appuser = new Appuser();
 
     public Note() {
     }
@@ -60,6 +62,14 @@ public class Note {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Appuser getAppuser() {
+        return appuser;
+    }
+
+    public void setAppuser(Appuser appuser) {
+        this.appuser = appuser;
     }
 
 }
