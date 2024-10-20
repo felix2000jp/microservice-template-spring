@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
-public class Note {
+class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,29 +22,24 @@ public class Note {
     @NotBlank
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appuser_id", nullable = false)
-    private Appuser appuser = new Appuser();
+    private Appuser appuser;
 
     public Note() {
     }
 
-    public Note(String title, String content) {
+    Note(String title, String content, Appuser appuser) {
         this.title = title;
         this.content = content;
-    }
-
-    public Note(UUID id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
+        this.appuser = appuser;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    void setId(UUID id) {
         this.id = id;
     }
 
@@ -52,7 +47,7 @@ public class Note {
         return title;
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         this.title = title;
     }
 
@@ -60,16 +55,12 @@ public class Note {
         return content;
     }
 
-    public void setContent(String content) {
+    void setContent(String content) {
         this.content = content;
     }
 
-    public Appuser getAppuser() {
-        return appuser;
+    void update(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
-
-    public void setAppuser(Appuser appuser) {
-        this.appuser = appuser;
-    }
-
 }

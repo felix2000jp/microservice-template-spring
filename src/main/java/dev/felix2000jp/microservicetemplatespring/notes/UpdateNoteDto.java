@@ -1,9 +1,9 @@
-package dev.felix2000jp.microservicetemplatespring.notes.dtos;
+package dev.felix2000jp.microservicetemplatespring.notes;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record CreateNoteDto(
+record UpdateNoteDto(
         @Size(min = 3, max = 50)
         @NotBlank
         String title,

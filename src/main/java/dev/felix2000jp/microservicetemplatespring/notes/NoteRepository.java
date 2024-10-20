@@ -3,12 +3,15 @@ package dev.felix2000jp.microservicetemplatespring.notes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface NoteRepository extends JpaRepository<Note, UUID> {
+interface NoteRepository extends JpaRepository<Note, UUID> {
 
-    Optional<Note> findByTitle(String title);
+    List<Note> findByAppuserId(UUID appuserId);
+
+    Optional<Note> findByIdAndAppuserId(UUID id, UUID appuserId);
 
 }

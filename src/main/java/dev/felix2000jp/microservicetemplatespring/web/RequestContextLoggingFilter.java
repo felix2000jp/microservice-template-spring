@@ -19,12 +19,11 @@ import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 @Order(HIGHEST_PRECEDENCE)
 @Component
-public class RequestContextLoggingFilter extends OncePerRequestFilter {
+class RequestContextLoggingFilter extends OncePerRequestFilter {
 
     private final static Logger logger = LoggerFactory.getLogger(RequestContextLoggingFilter.class);
 
     private final static String correlationIdHeaderName = "Correlation-Id";
-
     private final static String correlationIdLogName = "correlationId";
     private final static String requestPathLogName = "requestPath";
 

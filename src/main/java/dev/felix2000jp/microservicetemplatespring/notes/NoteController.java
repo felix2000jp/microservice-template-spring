@@ -1,59 +1,66 @@
 package dev.felix2000jp.microservicetemplatespring.notes;
 
-import dev.felix2000jp.microservicetemplatespring.notes.dtos.CreateNoteDto;
-import dev.felix2000jp.microservicetemplatespring.notes.dtos.NoteDto;
-import dev.felix2000jp.microservicetemplatespring.notes.dtos.UpdateNoteDto;
+import dev.felix2000jp.microservicetemplatespring.config.auth.AppuserPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/notes")
-public class NoteController {
+class NoteController {
 
-    private final NoteMapper noteMapper;
     private final NoteService noteService;
 
-    public NoteController(NoteMapper noteMapper, NoteService noteService) {
-        this.noteMapper = noteMapper;
+    NoteController(NoteService noteService) {
         this.noteService = noteService;
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<NoteDto> getById(@PathVariable UUID id) {
-        var note = noteService.findById(id);
-        var body = noteMapper.toDto(note);
+    @GetMapping
+    ResponseEntity<List<NoteDto>> findAll(@AuthenticationPrincipal AppuserPrincipal principal    ) {
+        var body = noteService.findAll(principal);
         return ResponseEntity.ok(body);
     }
 
-    @GetMapping("/title/{title}")
-    ResponseEntity<NoteDto> getByTitle(@PathVariable String title) {
-        var note = noteService.findByTitle(title);
-        var body = noteMapper.toDto(note);
+    @GetMapping("/{id}")
+    ResponseEntity<NoteDto> getById(
+            @AuthenticationPrincipal AppuserPrincipal principal,
+            @PathVariable UUID id
+    ) {
+        var body = noteService.findById(principal, id);
         return ResponseEntity.ok(body);
     }
 
     @PostMapping
-    ResponseEntity<Void> create(@Valid @RequestBody CreateNoteDto createNoteDto) {
-        var noteToCreate = noteMapper.toEntity(createNoteDto);
-        var note = noteService.create(noteToCreate);
-        var location = URI.create("/api/notes/" + note.getId());
+    ResponseEntity<Void> create(
+            @AuthenticationPrincipal AppuserPrincipal principal,
+            @Valid @RequestBody CreateNoteDto createNoteDto
+    ) {
+        var body = noteService.create(principal, createNoteDto);
+        var location = URI.create("/api/notes/" + body.id());
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody UpdateNoteDto updateNoteDto) {
-        var noteToUpdate = noteMapper.toEntity(id, updateNoteDto);
-        noteService.update(noteToUpdate);
+    ResponseEntity<Void> update(
+            @AuthenticationPrincipal AppuserPrincipal principal,
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdateNoteDto updateNoteDto
+    ) {
+        noteService.update(principal, id, updateNoteDto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable UUID id) {
-        noteService.delete(id);
+    ResponseEntity<Void> delete(
+            @AuthenticationPrincipal AppuserPrincipal principal,
+            @PathVariable UUID id
+    ) {
+        noteService.delete(principal, id);
         return ResponseEntity.noContent().build();
     }
 
