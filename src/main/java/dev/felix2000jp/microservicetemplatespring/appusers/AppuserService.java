@@ -2,6 +2,8 @@ package dev.felix2000jp.microservicetemplatespring.appusers;
 
 import dev.felix2000jp.microservicetemplatespring.config.auth.AppuserPrincipal;
 import dev.felix2000jp.microservicetemplatespring.config.auth.Scope;
+import dev.felix2000jp.microservicetemplatespring.exceptions.HttpConflictException;
+import dev.felix2000jp.microservicetemplatespring.exceptions.HttpNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +38,7 @@ class AppuserService implements UserDetailsService {
     AppuserDto find(AppuserPrincipal principal) {
         var appuser = appuserRepository
                 .findById(principal.id())
-                .orElseThrow(AppuserNotFoundException::new);
+                .orElseThrow(HttpNotFoundException::new);
 
         return appuserMapper.toDto(appuser);
     }
@@ -45,7 +47,7 @@ class AppuserService implements UserDetailsService {
         var doesUsernameExist = appuserRepository.existsByUsername(createAppuserDto.username());
 
         if (doesUsernameExist) {
-            throw new AppuserConflictException();
+            throw new HttpConflictException();
         }
 
         var appuserCreated = new Appuser(
@@ -60,7 +62,7 @@ class AppuserService implements UserDetailsService {
     AppuserDto delete(AppuserPrincipal principal) {
         var userToDelete = appuserRepository
                 .findById(principal.id())
-                .orElseThrow(AppuserNotFoundException::new);
+                .orElseThrow(HttpNotFoundException::new);
 
         appuserRepository.delete(userToDelete);
         return appuserMapper.toDto(userToDelete);
@@ -87,6 +89,6 @@ class AppuserService implements UserDetailsService {
     public Appuser loadUserByUsername(String username) {
         return appuserRepository
                 .findByUsername(username)
-                .orElseThrow(AppuserNotFoundException::new);
+                .orElseThrow(HttpNotFoundException::new);
     }
 }
