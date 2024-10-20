@@ -44,17 +44,9 @@ public class Appuser implements UserDetails {
         return id;
     }
 
-    void setId(UUID id) {
-        this.id = id;
-    }
-
     @Override
     public String getUsername() {
         return username;
-    }
-
-    void setUsername(String username) {
-        this.username = username;
     }
 
     @Override
@@ -62,16 +54,8 @@ public class Appuser implements UserDetails {
         return password;
     }
 
-    void setPassword(String password) {
-        this.password = password;
-    }
-
     public Scope getScope() {
         return scope;
-    }
-
-    void setScope(Scope scope) {
-        this.scope = scope;
     }
 
     @Override

@@ -39,24 +39,12 @@ class Note {
         return id;
     }
 
-    void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContent() {
         return content;
-    }
-
-    void setContent(String content) {
-        this.content = content;
     }
 
     void update(String title, String content) {
