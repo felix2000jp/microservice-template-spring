@@ -9,7 +9,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
-class MicroserviceTemplateSpringApplicationTests {
+public class MicroserviceTemplateSpringApplicationTests {
 
     @Container
     @ServiceConnection

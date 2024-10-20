@@ -24,7 +24,6 @@ class RequestContextLoggingFilter extends OncePerRequestFilter {
     private final static Logger logger = LoggerFactory.getLogger(RequestContextLoggingFilter.class);
 
     private final static String correlationIdHeaderName = "Correlation-Id";
-
     private final static String correlationIdLogName = "correlationId";
     private final static String requestPathLogName = "requestPath";
 

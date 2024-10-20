@@ -2,6 +2,22 @@
 
 This project serves as template for new spring applications.
 
+## Authentication
+
+This template uses both Basic and Bearer Token (JWT) authentication methods. For signatures, it uses the public and
+private keys in *resources/certs* folder. To generate new keys follow these steps:
+
+```
+# create rsa key pair
+openssl genrsa -out keypair.pem 2048
+
+# extract public key
+openssl rsa -in keypair.pem -pubout -out public.pem
+
+# create private key in PKCS#8 format
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
+```
+
 ## CI/CD
 
 This template makes use of GitHub actions for its CI/CD pipeline.

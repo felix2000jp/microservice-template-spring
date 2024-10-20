@@ -7,9 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-interface AppUserRepository extends JpaRepository<AppUser, UUID> {
+interface AppuserRepository extends JpaRepository<Appuser, UUID> {
 
-    Optional<AppUser> findByUsername(String username);
+    Optional<Appuser> findByUsername(String username);
 
     boolean existsByUsername(String username);
 
